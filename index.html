@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find Eustat dataset(s)</title>
+  <title>Buscador de tablas de Eustat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -272,35 +272,35 @@
 </head>
 <body>
   <div class="page">
-    <h1>Find Eustat dataset(s)</h1>
-    <div class="subline">Powered by <a href="#">GitHub Pages</a> / <a href="#">JavaScript</a></div>
+    <h1>Buscador de tablas de Eustat</h1>
 
     <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
     <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
 
     <div class="controls">
       <div class="field">
-        <label for="operationSearch">Search operation title(s), logical OR:</label>
-        <input id="operationSearch" type="text" placeholder="Ej. Cuentas económicas" />
+        <label for="operationSearch">Buscar por operación estadística (listado cerrado):</label>
+        <input id="operationSearch" list="operationSuggestions" type="text" placeholder="Selecciona o escribe una operación..." />
+        <datalist id="operationSuggestions"></datalist>
       </div>
 
       <div class="field">
-        <label for="keywordSearch">Search keyword(s), logical AND, across keywords and variables:</label>
+        <label for="keywordSearch">Buscar por palabras clave (en keywords y variables):</label>
         <input id="keywordSearch" type="text" placeholder="Ej. empleo mujeres" />
       </div>
 
       <div class="field">
-        <label for="titleSearch">Search dataset name(s), logical OR, autocomplete:</label>
+        <label for="titleSearch">Buscar por nombre de la tabla (con autocompletado):</label>
         <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
         <datalist id="titleSuggestions"></datalist>
       </div>
 
       <div class="button-col">
-        <button class="btn primary" id="updateBtn">Update View</button>
+        <button class="btn primary" id="updateBtn">Actualizar vista</button>
       </div>
 
       <div class="button-col">
-        <div>Download search results:</div>
+        <div>Descargar resultados:</div>
         <div class="download-menu">
           <button class="btn" id="downloadExcelBtn" disabled>⬇ Excel</button>
           <button class="btn" id="downloadJsonBtn" disabled>⬇ JSON</button>
@@ -310,18 +310,18 @@
 
     <div class="toolbar">
       <div class="left">
-        <span>Show</span>
+        <span>Mostrar</span>
         <select id="pageSize">
           <option value="10">10</option>
           <option value="25" selected>25</option>
           <option value="50">50</option>
           <option value="100">100</option>
         </select>
-        <span>entries</span>
+        <span>entradas</span>
       </div>
 
       <div class="right">
-        <label for="globalSearch">Search:</label>
+        <label for="globalSearch">Buscar:</label>
         <input id="globalSearch" type="text" />
       </div>
     </div>
@@ -331,16 +331,16 @@
         <thead>
           <tr>
             <th data-sort="rownum">No <span class="sort-ind">↕</span></th>
-            <th data-sort="operacion_titulo">Operation title <span class="sort-ind">↕</span></th>
-            <th data-sort="title">Dataset name <span class="sort-ind">↕</span></th>
-            <th data-sort="operacion_code">Operation code <span class="sort-ind">↕</span></th>
-            <th data-sort="dominio_code">Domain code <span class="sort-ind">↕</span></th>
-            <th data-sort="frecuencia">Frequency <span class="sort-ind">↕</span></th>
-            <th data-sort="first_period">Data start <span class="sort-ind">↕</span></th>
-            <th data-sort="last_period">Data end <span class="sort-ind">↕</span></th>
-            <th data-sort="updated">Last update <span class="sort-ind">↕</span></th>
+            <th data-sort="operacion_titulo">Operación estadística <span class="sort-ind">↕</span></th>
+            <th data-sort="title">Nombre de la tabla <span class="sort-ind">↕</span></th>
+            <th data-sort="frecuencia">Frecuencia <span class="sort-ind">↕</span></th>
+            <th data-sort="first_period">Inicio datos <span class="sort-ind">↕</span></th>
+            <th data-sort="last_period">Fin datos <span class="sort-ind">↕</span></th>
+            <th data-sort="updated">Última actualización <span class="sort-ind">↕</span></th>
             <th data-sort="variables">Variables <span class="sort-ind">↕</span></th>
-            <th data-sort="pxweb_url">Link <span class="sort-ind">↕</span></th>
+            <th data-sort="url_ficha_metodologica">Ficha metodológica <span class="sort-ind">↕</span></th>
+            <th data-sort="api_url">API <span class="sort-ind">↕</span></th>
+            <th data-sort="pxweb_url">Datos <span class="sort-ind">↕</span></th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -368,6 +368,7 @@
 
     const els = {
       operationSearch: document.getElementById('operationSearch'),
+      operationSuggestions: document.getElementById('operationSuggestions'),
       keywordSearch: document.getElementById('keywordSearch'),
       titleSearch: document.getElementById('titleSearch'),
       titleSuggestions: document.getElementById('titleSuggestions'),
@@ -399,7 +400,10 @@
 
     function buildSuggestions(data) {
       const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
       els.titleSuggestions.innerHTML = titles.slice(0, 500).map(title => `<option value="${escapeHtml(title)}"></option>`).join('');
+      els.operationSuggestions.innerHTML = operations.map(op => `<option value="${escapeHtml(op)}"></option>`).join('');
     }
 
     function escapeHtml(str) {
@@ -495,14 +499,14 @@
             <td>${rownum}</td>
             <td>${escapeHtml(row.operacion_titulo || '')}</td>
             <td><div class="dataset-title">${escapeHtml(row.title || '')}</div></td>
-            <td>${escapeHtml(row.operacion_code || '')}</td>
-            <td>${escapeHtml(row.dominio_code || '')}</td>
             <td>${escapeHtml(row.frecuencia || '')}</td>
             <td>${escapeHtml(row.first_period || '')}</td>
             <td>${escapeHtml(row.last_period || '')}</td>
             <td>${escapeHtml(row.updated || '')}</td>
             <td>${renderVariableTags(row.variables)}</td>
-            <td>${row.pxweb_url ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">link</a>` : ''}</td>
+            <td>${row.url_ficha_metodologica ? `<a href="${row.url_ficha_metodologica}" target="_blank" rel="noopener">ficha</a>` : ''}</td>
+            <td>${row.api_url ? `<a href="${row.api_url}" target="_blank" rel="noopener">api</a>` : ''}</td>
+            <td>${row.pxweb_url ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">datos</a>` : ''}</td>
           </tr>
         `;
       }).join('');
@@ -510,7 +514,7 @@
       const total = state.filteredData.length;
       const shownFrom = total === 0 ? 0 : start + 1;
       const shownTo = Math.min(end, total);
-      els.summary.textContent = `Showing ${shownFrom} to ${shownTo} of ${total} entries`;
+      els.summary.textContent = `Mostrando ${shownFrom} a ${shownTo} de ${total} entradas`;
 
       els.prevBtn.disabled = state.currentPage === 1;
       els.nextBtn.disabled = end >= total;
