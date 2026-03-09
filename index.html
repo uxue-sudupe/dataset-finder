@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Eustat dataset(s)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2f79b7;
+      --blue-dark: #26689f;
+      --line: #e5e5e5;
+      --line-2: #d9d9d9;
+      --text: #222;
+      --muted: #666;
+      --head-bg: #fafafa;
+      --stripe: #f7f7f7;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Open Sans", Arial, sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: white;
+    }
+
+    .page {
+      max-width: 1700px;
+      margin: 0 auto;
+      padding: 8px 16px 24px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      font-weight: 400;
+      color: #1f1f1f;
+    }
+
+    .subline {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .subline a {
+      color: #3a73ad;
+      text-decoration: none;
+    }
+
+    .help {
+      margin: 0 0 10px;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.15fr) minmax(220px, 1.15fr) minmax(220px, 1.15fr) 150px 170px;
+      gap: 24px;
+      align-items: end;
+      margin: 10px 0 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #cfcfcf;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font: inherit;
+      background: #fff;
+    }
+
+    .button-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 10px 14px;
+      border: 1px solid #bfcddd;
+      border-radius: 4px;
+      background: white;
+      color: #2a2a2a;
+      font: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue-dark);
+      min-height: 48px;
+    }
+
+    .btn.primary:hover { background: var(--blue-dark); }
+    .btn:hover { background: #f6f6f6; }
+
+    .toolbar {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar .left,
+    .toolbar .right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #222;
+    }
+
+    .toolbar select,
+    .toolbar input {
+      height: 30px;
+      border: 1px solid #cfcfcf;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font: inherit;
+      background: white;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-top: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1350px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: var(--head-bg);
+      border-bottom: 1px solid var(--line-2);
+      border-right: 1px solid #efefef;
+      text-align: left;
+      vertical-align: bottom;
+      padding: 12px 10px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #1f1f1f;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    thead th:last-child,
+    tbody td:last-child { border-right: none; }
+
+    tbody td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    tbody tr:nth-child(even) { background: var(--stripe); }
+    tbody tr:hover {
+      background: #2d78df;
+      color: white;
+    }
+    tbody tr:hover a,
+    tbody tr:hover .linkish { color: white; }
+
+    .sort-ind {
+      color: #bdbdbd;
+      font-size: 11px;
+      margin-left: 6px;
+    }
+
+    .dataset-title {
+      font-weight: 700;
+      max-width: 430px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #eef4fa;
+      color: #295f93;
+      border: 1px solid #d6e4f1;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin: 2px 4px 2px 0;
+      white-space: nowrap;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .pagination .btn {
+      min-height: 30px;
+      padding: 6px 10px;
+    }
+
+    .download-menu {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .download-menu .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .linkish,
+    a {
+      color: #2b6cb0;
+      text-decoration: none;
+    }
+
+    a:hover,
+    .linkish:hover { text-decoration: underline; }
+
+    datalist option { font-family: inherit; }
+
+    @media (max-width: 1200px) {
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      .page { padding: 12px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Find Eustat dataset(s)</h1>
+    <div class="subline">Powered by <a href="#">GitHub Pages</a> / <a href="#">JavaScript</a></div>
+
+    <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
+    <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="operationSearch">Search operation title(s), logical OR:</label>
+        <input id="operationSearch" type="text" placeholder="Ej. Cuentas económicas" />
+      </div>
+
+      <div class="field">
+        <label for="keywordSearch">Search keyword(s), logical AND, across keywords and variables:</label>
+        <input id="keywordSearch" type="text" placeholder="Ej. empleo mujeres" />
+      </div>
+
+      <div class="field">
+        <label for="titleSearch">Search dataset name(s), logical OR, autocomplete:</label>
+        <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
+        <datalist id="titleSuggestions"></datalist>
+      </div>
+
+      <div class="button-col">
+        <button class="btn primary" id="updateBtn">Update View</button>
+      </div>
+
+      <div class="button-col">
+        <div>Download search results:</div>
+        <div class="download-menu">
+          <button class="btn" id="downloadExcelBtn" disabled>⬇ Excel</button>
+          <button class="btn" id="downloadJsonBtn" disabled>⬇ JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="left">
+        <span>Show</span>
+        <select id="pageSize">
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span>entries</span>
+      </div>
+
+      <div class="right">
+        <label for="globalSearch">Search:</label>
+        <input id="globalSearch" type="text" />
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="resultsTable">
+        <thead>
+          <tr>
+            <th data-sort="rownum">No <span class="sort-ind">↕</span></th>
+            <th data-sort="operacion_titulo">Operation title <span class="sort-ind">↕</span></th>
+            <th data-sort="title">Dataset name <span class="sort-ind">↕</span></th>
+            <th data-sort="operacion_code">Operation code <span class="sort-ind">↕</span></th>
+            <th data-sort="dominio_code">Domain code <span class="sort-ind">↕</span></th>
+            <th data-sort="frecuencia">Frequency <span class="sort-ind">↕</span></th>
+            <th data-sort="first_period">Data start <span class="sort-ind">↕</span></th>
+            <th data-sort="last_period">Data end <span class="sort-ind">↕</span></th>
+            <th data-sort="updated">Last update <span class="sort-ind">↕</span></th>
+            <th data-sort="variables">Variables <span class="sort-ind">↕</span></th>
+            <th data-sort="pxweb_url">Link <span class="sort-ind">↕</span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <div id="summary"></div>
+      <div>
+        <button class="btn" id="prevBtn">Previous</button>
+        <button class="btn" id="nextBtn">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      rawData: [],
+      filteredData: [],
+      currentPage: 1,
+      pageSize: 25,
+      sortKey: 'title',
+      sortDir: 'asc'
+    };
+
+    const els = {
+      operationSearch: document.getElementById('operationSearch'),
+      keywordSearch: document.getElementById('keywordSearch'),
+      titleSearch: document.getElementById('titleSearch'),
+      titleSuggestions: document.getElementById('titleSuggestions'),
+      globalSearch: document.getElementById('globalSearch'),
+      pageSize: document.getElementById('pageSize'),
+      updateBtn: document.getElementById('updateBtn'),
+      tbody: document.querySelector('#resultsTable tbody'),
+      summary: document.getElementById('summary'),
+      prevBtn: document.getElementById('prevBtn'),
+      nextBtn: document.getElementById('nextBtn')
+    };
+
+    function normalizeText(value) {
+      return String(value ?? '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    function splitTerms(value) {
+      return normalizeText(value).split(/\s+/).filter(Boolean);
+    }
+
+    function arrayToDisplay(value) {
+      if (Array.isArray(value)) return value.join(', ');
+      return value ?? '';
+    }
+
+    function buildSuggestions(data) {
+      const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      els.titleSuggestions.innerHTML = titles.slice(0, 500).map(title => `<option value="${escapeHtml(title)}"></option>`).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function matchesOperation(row, term) {
+      return normalizeText(row.operacion_titulo).includes(term) || normalizeText(row.operacion_code).includes(term);
+    }
+
+    function matchesKeywords(row, terms) {
+      const haystack = [row.keywords, arrayToDisplay(row.variables), row.search_text].map(normalizeText).join(' ');
+      return terms.every(t => haystack.includes(t));
+    }
+
+    function matchesTitle(row, term) {
+      return normalizeText(row.title).includes(term);
+    }
+
+    function matchesGlobal(row, term) {
+      const haystack = [
+        row.title,
+        row.operacion_titulo,
+        row.operacion_code,
+        row.dominio_code,
+        row.keywords,
+        arrayToDisplay(row.variables),
+        row.first_period,
+        row.last_period,
+        row.frecuencia
+      ].map(normalizeText).join(' ');
+      return haystack.includes(term);
+    }
+
+    function applyFilters() {
+      const operationTerm = normalizeText(els.operationSearch.value);
+      const keywordTerms = splitTerms(els.keywordSearch.value);
+      const titleTerm = normalizeText(els.titleSearch.value);
+      const globalTerm = normalizeText(els.globalSearch.value);
+
+      state.filteredData = state.rawData.filter(row => {
+        if (operationTerm && !matchesOperation(row, operationTerm)) return false;
+        if (keywordTerms.length && !matchesKeywords(row, keywordTerms)) return false;
+        if (titleTerm && !matchesTitle(row, titleTerm)) return false;
+        if (globalTerm && !matchesGlobal(row, globalTerm)) return false;
+        return true;
+      });
+
+      sortData();
+      state.currentPage = 1;
+      renderTable();
+    }
+
+    function sortData() {
+      const { sortKey, sortDir } = state;
+      const factor = sortDir === 'asc' ? 1 : -1;
+
+      state.filteredData.sort((a, b) => {
+        let av;
+        let bv;
+
+        if (sortKey === 'variables') {
+          av = arrayToDisplay(a.variables);
+          bv = arrayToDisplay(b.variables);
+        } else {
+          av = a[sortKey] ?? '';
+          bv = b[sortKey] ?? '';
+        }
+
+        av = normalizeText(av);
+        bv = normalizeText(bv);
+
+        if (av < bv) return -1 * factor;
+        if (av > bv) return 1 * factor;
+        return 0;
+      });
+    }
+
+    function renderTable() {
+      const start = (state.currentPage - 1) * state.pageSize;
+      const end = start + state.pageSize;
+      const pageRows = state.filteredData.slice(start, end);
+
+      els.tbody.innerHTML = pageRows.map((row, idx) => {
+        const rownum = start + idx + 1;
+        return `
+          <tr>
+            <td>${rownum}</td>
+            <td>${escapeHtml(row.operacion_titulo || '')}</td>
+            <td><div class="dataset-title">${escapeHtml(row.title || '')}</div></td>
+            <td>${escapeHtml(row.operacion_code || '')}</td>
+            <td>${escapeHtml(row.dominio_code || '')}</td>
+            <td>${escapeHtml(row.frecuencia || '')}</td>
+            <td>${escapeHtml(row.first_period || '')}</td>
+            <td>${escapeHtml(row.last_period || '')}</td>
+            <td>${escapeHtml(row.updated || '')}</td>
+            <td>${renderVariableTags(row.variables)}</td>
+            <td>${row.pxweb_url ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">link</a>` : ''}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const total = state.filteredData.length;
+      const shownFrom = total === 0 ? 0 : start + 1;
+      const shownTo = Math.min(end, total);
+      els.summary.textContent = `Showing ${shownFrom} to ${shownTo} of ${total} entries`;
+
+      els.prevBtn.disabled = state.currentPage === 1;
+      els.nextBtn.disabled = end >= total;
+    }
+
+    function renderVariableTags(variables) {
+      if (!Array.isArray(variables) || variables.length === 0) return '';
+      return variables.slice(0, 4).map(v => `<span class="tag">${escapeHtml(v)}</span>`).join('');
+    }
+
+    function bindSorting() {
+      document.querySelectorAll('th[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sort;
+          if (state.sortKey === key) {
+            state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+          } else {
+            state.sortKey = key;
+            state.sortDir = 'asc';
+          }
+          sortData();
+          renderTable();
+        });
+      });
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch('./data/index_es.json');
+        const data = await response.json();
+        state.rawData = data;
+        state.filteredData = [...data];
+        buildSuggestions(data);
+        sortData();
+        renderTable();
+      } catch (error) {
+        els.tbody.innerHTML = '<tr><td colspan="11">No se ha podido cargar data/index_es.json</td></tr>';
+        console.error(error);
+      }
+    }
+
+    els.updateBtn.addEventListener('click', applyFilters);
+    els.pageSize.addEventListener('change', () => {
+      state.pageSize = Number(els.pageSize.value);
+      state.currentPage = 1;
+      renderTable();
+    });
+    els.prevBtn.addEventListener('click', () => {
+      if (state.currentPage > 1) {
+        state.currentPage -= 1;
+        renderTable();
+      }
+    });
+    els.nextBtn.addEventListener('click', () => {
+      const maxPage = Math.ceil(state.filteredData.length / state.pageSize);
+      if (state.currentPage < maxPage) {
+        state.currentPage += 1;
+        renderTable();
+      }
+    });
+    els.globalSearch.addEventListener('input', applyFilters);
+    els.titleSearch.addEventListener('change', applyFilters);
+    bindSorting();
+    loadData();
+  </script>
+</body>
+</html>
