@@ -17,9 +17,13 @@
       --muted: #666;
       --head-bg: #fafafa;
       --stripe: #f7f7f7;
+      --modal-border: #5f8f8d;
+      --tab-bg: #eaf2f2;
+      --tab-active: #6b9c9a;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Open Sans", Arial, sans-serif;
@@ -46,9 +50,17 @@
       margin-bottom: 22px;
     }
 
-    .subline a {
-      color: #3a73ad;
+    .subline a,
+    a,
+    .linkish {
+      color: #2b6cb0;
       text-decoration: none;
+    }
+
+    a:hover,
+    .linkish:hover,
+    .subline a:hover {
+      text-decoration: underline;
     }
 
     .help {
@@ -58,7 +70,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(220px, 1.15fr) minmax(220px, 1.15fr) minmax(220px, 1.15fr) 150px 170px;
+      grid-template-columns: minmax(220px, 1.15fr) minmax(220px, 1.15fr) minmax(220px, 1.15fr) 150px 190px;
       gap: 24px;
       align-items: end;
       margin: 10px 0 20px;
@@ -117,6 +129,11 @@
     .btn.primary:hover { background: var(--blue-dark); }
     .btn:hover { background: #f6f6f6; }
 
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
     .toolbar {
       border-top: 1px solid var(--line);
       padding-top: 18px;
@@ -154,7 +171,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1350px;
+      min-width: 1420px;
     }
 
     thead th {
@@ -184,12 +201,22 @@
     }
 
     tbody tr:nth-child(even) { background: var(--stripe); }
+
     tbody tr:hover {
       background: #2d78df;
       color: white;
     }
+
     tbody tr:hover a,
-    tbody tr:hover .linkish { color: white; }
+    tbody tr:hover .linkish,
+    tbody tr:hover .tag {
+      color: white;
+    }
+
+    tbody tr:hover .tag {
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.12);
+    }
 
     .sort-ind {
       color: #bdbdbd;
@@ -199,12 +226,7 @@
 
     .dataset-title {
       font-weight: 700;
-      max-width: 430px;
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 12px;
+      max-width: 440px;
     }
 
     .tag {
@@ -228,32 +250,150 @@
       flex-wrap: wrap;
     }
 
-    .pagination .btn {
-      min-height: 30px;
-      padding: 6px 10px;
-    }
-
     .download-menu {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .download-menu .btn[disabled] {
-      opacity: 0.55;
-      cursor: not-allowed;
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 18px;
     }
 
-    .linkish,
-    a {
-      color: #2b6cb0;
-      text-decoration: none;
+    .modal-backdrop.open {
+      display: flex;
     }
 
-    a:hover,
-    .linkish:hover { text-decoration: underline; }
+    .modal {
+      width: min(980px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fff;
+      border: 1px solid #cfcfcf;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
 
-    datalist option { font-family: inherit; }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #d6dddd;
+      font-size: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .modal-body {
+      padding: 16px;
+    }
+
+    .modal-help {
+      margin: 4px 0 14px;
+      font-size: 15px;
+    }
+
+    .api-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--modal-border);
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .api-tab {
+      border: none;
+      padding: 12px 16px;
+      background: var(--tab-bg);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .api-tab.active {
+      background: var(--tab-active);
+      color: #fff;
+    }
+
+    .api-panel {
+      display: none;
+      border: 1px solid var(--modal-border);
+      padding: 12px;
+      background: #fff;
+    }
+
+    .api-panel.active {
+      display: block;
+    }
+
+    .api-method {
+      display: inline-block;
+      font-weight: 700;
+      border: 2px solid #2e5d5e;
+      padding: 0 6px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      background: #f7fbfb;
+    }
+
+    .api-label {
+      margin: 10px 0 8px;
+      font-size: 14px;
+    }
+
+    .code-box {
+      position: relative;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .code-box pre {
+      margin: 0;
+      padding: 14px 16px;
+      overflow: auto;
+      font-size: 15px;
+      line-height: 1.45;
+      font-family: Consolas, Monaco, monospace;
+      background: #f8f8f8;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid #cfcfcf;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 6px 9px;
+      font-size: 12px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 14px;
+    }
 
     @media (max-width: 1200px) {
       .controls {
@@ -265,14 +405,22 @@
       .controls {
         grid-template-columns: 1fr;
       }
-      .page { padding: 12px; }
-      h1 { font-size: 22px; }
+      .page {
+        padding: 12px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .modal {
+        max-height: 94vh;
+      }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <h1>Buscador de tablas de Eustat</h1>
+    <div class="subline">Powered by <a href="#">GitHub Pages</a> / <a href="#">JavaScript</a></div>
 
     <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
     <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
@@ -356,6 +504,51 @@
     </div>
   </div>
 
+  <div class="modal-backdrop" id="apiModalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
+      <div class="modal-header">
+        <div class="modal-title" id="apiModalTitle">API Data Query</div>
+        <button class="modal-close" id="apiModalClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-help">A continuación seleccione el formato en el que desea obtener los datos:</p>
+
+        <div class="api-tabs">
+          <button class="api-tab active" data-tab="get">GET</button>
+          <button class="api-tab" data-tab="post">POST (json-stat)</button>
+        </div>
+
+        <div class="api-panel active" data-panel="get">
+          <div class="api-method">GET</div>
+          <div class="api-label">Url de consulta:</div>
+          <div class="code-box">
+            <button class="copy-btn" data-copy-target="getUrlCode">Copiar</button>
+            <pre id="getUrlCode"></pre>
+          </div>
+        </div>
+
+        <div class="api-panel" data-panel="post">
+          <div class="api-method">POST</div>
+          <div class="api-label">Url de consulta:</div>
+          <div class="code-box" style="margin-bottom: 12px;">
+            <button class="copy-btn" data-copy-target="postUrlCode">Copiar</button>
+            <pre id="postUrlCode"></pre>
+          </div>
+
+          <div class="api-label">Body JSON:</div>
+          <div class="code-box">
+            <button class="copy-btn" data-copy-target="postBodyCode">Copiar</button>
+            <pre id="postBodyCode"></pre>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn" id="modalCloseBtn">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const state = {
       rawData: [],
@@ -378,7 +571,13 @@
       tbody: document.querySelector('#resultsTable tbody'),
       summary: document.getElementById('summary'),
       prevBtn: document.getElementById('prevBtn'),
-      nextBtn: document.getElementById('nextBtn')
+      nextBtn: document.getElementById('nextBtn'),
+      apiModalBackdrop: document.getElementById('apiModalBackdrop'),
+      apiModalClose: document.getElementById('apiModalClose'),
+      modalCloseBtn: document.getElementById('modalCloseBtn'),
+      getUrlCode: document.getElementById('getUrlCode'),
+      postUrlCode: document.getElementById('postUrlCode'),
+      postBodyCode: document.getElementById('postBodyCode')
     };
 
     function normalizeText(value) {
@@ -398,14 +597,6 @@
       return value ?? '';
     }
 
-    function buildSuggestions(data) {
-      const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-      const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-
-      els.titleSuggestions.innerHTML = titles.slice(0, 500).map(title => `<option value="${escapeHtml(title)}"></option>`).join('');
-      els.operationSuggestions.innerHTML = operations.map(op => `<option value="${escapeHtml(op)}"></option>`).join('');
-    }
-
     function escapeHtml(str) {
       return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -415,8 +606,16 @@
         .replace(/'/g, '&#039;');
     }
 
+    function buildSuggestions(data) {
+      const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+      els.titleSuggestions.innerHTML = titles.slice(0, 500).map(title => `<option value="${escapeHtml(title)}"></option>`).join('');
+      els.operationSuggestions.innerHTML = operations.map(op => `<option value="${escapeHtml(op)}"></option>`).join('');
+    }
+
     function matchesOperation(row, term) {
-      return normalizeText(row.operacion_titulo).includes(term) || normalizeText(row.operacion_code).includes(term);
+      return normalizeText(row.operacion_titulo).includes(term);
     }
 
     function matchesKeywords(row, terms) {
@@ -432,13 +631,12 @@
       const haystack = [
         row.title,
         row.operacion_titulo,
-        row.operacion_code,
-        row.dominio_code,
         row.keywords,
         arrayToDisplay(row.variables),
         row.first_period,
         row.last_period,
-        row.frecuencia
+        row.frecuencia,
+        row.updated
       ].map(normalizeText).join(' ');
       return haystack.includes(term);
     }
@@ -467,16 +665,8 @@
       const factor = sortDir === 'asc' ? 1 : -1;
 
       state.filteredData.sort((a, b) => {
-        let av;
-        let bv;
-
-        if (sortKey === 'variables') {
-          av = arrayToDisplay(a.variables);
-          bv = arrayToDisplay(b.variables);
-        } else {
-          av = a[sortKey] ?? '';
-          bv = b[sortKey] ?? '';
-        }
+        let av = sortKey === 'variables' ? arrayToDisplay(a.variables) : (a[sortKey] ?? '');
+        let bv = sortKey === 'variables' ? arrayToDisplay(b.variables) : (b[sortKey] ?? '');
 
         av = normalizeText(av);
         bv = normalizeText(bv);
@@ -487,6 +677,11 @@
       });
     }
 
+    function renderVariableTags(variables) {
+      if (!Array.isArray(variables) || variables.length === 0) return '';
+      return variables.slice(0, 4).map(v => `<span class="tag">${escapeHtml(v)}</span>`).join('');
+    }
+
     function renderTable() {
       const start = (state.currentPage - 1) * state.pageSize;
       const end = start + state.pageSize;
@@ -494,6 +689,7 @@
 
       els.tbody.innerHTML = pageRows.map((row, idx) => {
         const rownum = start + idx + 1;
+        const apiLabel = row.api_url ? `<a href="#" class="api-link" data-api-url="${escapeHtml(row.api_url)}">consulta</a>` : '';
         return `
           <tr>
             <td>${rownum}</td>
@@ -505,7 +701,7 @@
             <td>${escapeHtml(row.updated || '')}</td>
             <td>${renderVariableTags(row.variables)}</td>
             <td>${row.url_ficha_metodologica ? `<a href="${row.url_ficha_metodologica}" target="_blank" rel="noopener">ficha</a>` : ''}</td>
-            <td>${row.api_url ? `<a href="${row.api_url}" target="_blank" rel="noopener">api</a>` : ''}</td>
+            <td>${apiLabel}</td>
             <td>${row.pxweb_url ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">datos</a>` : ''}</td>
           </tr>
         `;
@@ -518,11 +714,8 @@
 
       els.prevBtn.disabled = state.currentPage === 1;
       els.nextBtn.disabled = end >= total;
-    }
 
-    function renderVariableTags(variables) {
-      if (!Array.isArray(variables) || variables.length === 0) return '';
-      return variables.slice(0, 4).map(v => `<span class="tag">${escapeHtml(v)}</span>`).join('');
+      bindApiLinks();
     }
 
     function bindSorting() {
@@ -537,6 +730,69 @@
           }
           sortData();
           renderTable();
+        });
+      });
+    }
+
+    function openApiModal(apiUrl) {
+      els.getUrlCode.textContent = apiUrl;
+      els.postUrlCode.textContent = apiUrl;
+      els.postBodyCode.textContent = JSON.stringify({
+        query: [],
+        response: { format: 'json-stat' }
+      }, null, 2);
+
+      els.apiModalBackdrop.classList.add('open');
+      activateTab('get');
+    }
+
+    function closeApiModal() {
+      els.apiModalBackdrop.classList.remove('open');
+    }
+
+    function activateTab(tabName) {
+      document.querySelectorAll('.api-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      document.querySelectorAll('.api-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.panel === tabName);
+      });
+    }
+
+    function bindApiLinks() {
+      document.querySelectorAll('.api-link').forEach(link => {
+        link.addEventListener('click', evt => {
+          evt.preventDefault();
+          openApiModal(link.dataset.apiUrl);
+        });
+      });
+    }
+
+    function bindModal() {
+      els.apiModalClose.addEventListener('click', closeApiModal);
+      els.modalCloseBtn.addEventListener('click', closeApiModal);
+      els.apiModalBackdrop.addEventListener('click', evt => {
+        if (evt.target === els.apiModalBackdrop) closeApiModal();
+      });
+      document.addEventListener('keydown', evt => {
+        if (evt.key === 'Escape') closeApiModal();
+      });
+
+      document.querySelectorAll('.api-tab').forEach(btn => {
+        btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+      });
+
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const target = document.getElementById(btn.dataset.copyTarget);
+          try {
+            await navigator.clipboard.writeText(target.textContent);
+            btn.textContent = 'Copiado';
+            setTimeout(() => { btn.textContent = 'Copiar'; }, 1200);
+          } catch (e) {
+            btn.textContent = 'Error';
+            setTimeout(() => { btn.textContent = 'Copiar'; }, 1200);
+          }
         });
       });
     }
@@ -577,7 +833,9 @@
     });
     els.globalSearch.addEventListener('input', applyFilters);
     els.titleSearch.addEventListener('change', applyFilters);
+
     bindSorting();
+    bindModal();
     loadData();
   </script>
 </body>
