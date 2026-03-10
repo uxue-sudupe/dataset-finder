@@ -354,6 +354,12 @@
       background: #f7fbfb;
     }
 
+    .api-info {
+      margin: 6px 0 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     .api-label {
       margin: 10px 0 8px;
       font-size: 14px;
@@ -420,7 +426,7 @@
 <body>
   <div class="page">
     <h1>Buscador de tablas de Eustat</h1>
-    <div class="subline">Powered by <a href="#">GitHub Pages</a> / <a href="#">JavaScript</a></div>
+
 
     <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
     <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
@@ -511,15 +517,19 @@
         <button class="modal-close" id="apiModalClose" aria-label="Cerrar">✕</button>
       </div>
       <div class="modal-body">
-        <p class="modal-help">A continuación seleccione el formato en el que desea obtener los datos:</p>
+        <p class="modal-help">A continuación seleccione el tipo de consulta que desea realizar:</p>
 
         <div class="api-tabs">
-          <button class="api-tab active" data-tab="get">GET</button>
-          <button class="api-tab" data-tab="post">POST (json-stat)</button>
+          <button class="api-tab active" data-tab="get">GET — metadatos</button>
+          <button class="api-tab" data-tab="post">POST — datos</button>
         </div>
 
         <div class="api-panel active" data-panel="get">
           <div class="api-method">GET</div>
+          <p class="api-info">
+            Esta consulta permite obtener los <b>metadatos de la tabla</b>
+            (variables, valores disponibles, periodos, etc.).
+          </p>
           <div class="api-label">Url de consulta:</div>
           <div class="code-box">
             <button class="copy-btn" data-copy-target="getUrlCode">Copiar</button>
@@ -529,6 +539,13 @@
 
         <div class="api-panel" data-panel="post">
           <div class="api-method">POST</div>
+          <p class="api-info">
+            Esta consulta permite obtener los <b>datos de la tabla</b>.
+            La consulta mostrada es un ejemplo sin filtros.
+            Para construir consultas con filtros consulte la
+            <a href="https://github.com/eustat/API-Eustat" target="_blank" rel="noopener">documentación de la API de Eustat</a>.
+          </p>
+
           <div class="api-label">Url de consulta:</div>
           <div class="code-box" style="margin-bottom: 12px;">
             <button class="copy-btn" data-copy-target="postUrlCode">Copiar</button>
