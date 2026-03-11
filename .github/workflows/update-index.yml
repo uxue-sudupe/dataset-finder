@@ -1,9 +1,9 @@
 name: Update Eustat dataset index
 
 on:
-  schedule:
-    - cron: "0 11 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"
 
 permissions:
   contents: write
@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -40,9 +39,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
           git add data/index_es.json
-
           git diff --quiet && git diff --staged --quiet || git commit -m "Update dataset index"
-
           git push
