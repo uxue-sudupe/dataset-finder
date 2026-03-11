@@ -706,7 +706,7 @@
 
       els.tbody.innerHTML = pageRows.map((row, idx) => {
         const rownum = start + idx + 1;
-        const apiLabel = row.api_url ? `<a href="#" class="api-link" data-api-url="${escapeHtml(row.api_url)}">consulta</a>` : '';
+        const apiLabel = row.api_url ? `<a href="#" class="api-link" data-api-url="${escapeHtml(row.api_url)}">api</a>` : '';
         return `
           <tr>
             <td>${rownum}</td>
