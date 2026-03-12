@@ -102,7 +102,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(240px, 0.95fr) minmax(240px, 1.15fr) minmax(240px, 1.05fr) auto;
+      grid-template-columns: minmax(240px, 0.95fr) minmax(280px, 1.15fr) minmax(260px, 1.05fr) auto;
       gap: 18px;
       align-items: end;
       padding: 18px 24px 20px;
@@ -262,7 +262,8 @@
 
     tbody tr:hover a,
     tbody tr:hover .linkish,
-    tbody tr:hover .tag {
+    tbody tr:hover .tag,
+    tbody tr:hover .dataset-sub {
       color: white;
     }
 
@@ -525,9 +526,8 @@
 
         <div class="field">
           <label for="titleSearch">Nombre de la tabla</label>
-          <select id="titleSearch">
-            <option value="">Todas las tablas</option>
-          </select>
+          <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Todas las tablas o escribe para autocompletar..." />
+          <datalist id="titleSuggestions"></datalist>
         </div>
 
         <div class="field">
@@ -655,12 +655,14 @@
       currentPage: 1,
       pageSize: 25,
       sortKey: 'updated',
-      sortDir: 'desc'
+      sortDir: 'desc',
+      titleUniverse: []
     };
 
     const els = {
       operationSearch: document.getElementById('operationSearch'),
       titleSearch: document.getElementById('titleSearch'),
+      titleSuggestions: document.getElementById('titleSuggestions'),
       globalSearch: document.getElementById('globalSearch'),
       pageSize: document.getElementById('pageSize'),
       tbody: document.querySelector('#resultsTable tbody'),
@@ -712,20 +714,31 @@
       URL.revokeObjectURL(url);
     }
 
-    function buildSelectors(data) {
+    function buildOperationSelector(data) {
       const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b));
-
-      const titles = [...new Set(data.map(d => d.title).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b));
 
       els.operationSearch.innerHTML =
         `<option value="">Todas las operaciones</option>` +
         operations.map(op => `<option value="${escapeHtml(op)}">${escapeHtml(op)}</option>`).join('');
+    }
 
-      els.titleSearch.innerHTML =
-        `<option value="">Todas las tablas</option>` +
-        titles.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
+    function rebuildTitleSuggestions() {
+      const operationValue = els.operationSearch.value;
+
+      let rows = state.rawData;
+      if (operationValue) {
+        rows = rows.filter(row => normalizeText(row.operacion_titulo) === normalizeText(operationValue));
+      }
+
+      const titles = [...new Set(rows.map(d => d.title).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+
+      state.titleUniverse = titles;
+
+      els.titleSuggestions.innerHTML = titles
+        .map(title => `<option value="${escapeHtml(title)}"></option>`)
+        .join('');
     }
 
     function matchesOperation(row, operationValue) {
@@ -790,7 +803,7 @@
 
     function applyFilters() {
       const operationValue = els.operationSearch.value;
-      const titleValue = els.titleSearch.value;
+      const titleValue = normalizeText(els.titleSearch.value);
       const globalTerm = normalizeText(els.globalSearch.value);
 
       let baseData = state.rawData.filter(row => {
@@ -1035,7 +1048,8 @@
         state.filteredData = [...data];
 
         renderIndexMeta(Array.isArray(payload) ? {} : payload, data);
-        buildSelectors(data);
+        buildOperationSelector(data);
+        rebuildTitleSuggestions();
         sortData();
         renderTable();
 
@@ -1046,7 +1060,13 @@
       }
     }
 
-    els.operationSearch.addEventListener('change', applyFilters);
+    els.operationSearch.addEventListener('change', () => {
+      els.titleSearch.value = '';
+      rebuildTitleSuggestions();
+      applyFilters();
+    });
+
+    els.titleSearch.addEventListener('input', applyFilters);
     els.titleSearch.addEventListener('change', applyFilters);
     els.globalSearch.addEventListener('input', applyFilters);
 
