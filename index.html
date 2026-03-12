@@ -425,15 +425,15 @@
 </head>
 <body>
   <div class="page">
-    <h1>Buscador de tablas de Eustat</h1>
-
+    <h1>Buscador de datasets de Eustat</h1>
+    <div id="indexUpdated" class="subline"></div>
 
     <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
     <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
 
     <div class="controls">
       <div class="field">
-        <label for="operationSearch">Buscar por operación estadística (listado cerrado):</label>
+        <label for="operationSearch">Buscar por operación estadística:</label>
         <input id="operationSearch" list="operationSuggestions" type="text" placeholder="Selecciona o escribe una operación..." />
         <datalist id="operationSuggestions"></datalist>
       </div>
@@ -444,7 +444,7 @@
       </div>
 
       <div class="field">
-        <label for="titleSearch">Buscar por nombre de la tabla (con autocompletado):</label>
+        <label for="titleSearch">Buscar por nombre de la tabla:</label>
         <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
         <datalist id="titleSuggestions"></datalist>
       </div>
@@ -493,7 +493,7 @@
             <th data-sort="updated">Última actualización <span class="sort-ind">↕</span></th>
             <th data-sort="variables">Variables <span class="sort-ind">↕</span></th>
             <th data-sort="url_ficha_metodologica">Ficha metodológica <span class="sort-ind">↕</span></th>
-            <th data-sort="api_url">API <span class="sort-ind">↕</span></th>
+            <th data-sort="api_url">Endpoint API <span class="sort-ind">↕</span></th>
             <th data-sort="pxweb_url">Datos <span class="sort-ind">↕</span></th>
           </tr>
         </thead>
