@@ -815,19 +815,27 @@
     }
 
     async function loadData() {
-      try {
-        const response = await fetch('./data/index_es.json');
-        const data = await response.json();
-        state.rawData = data;
-        state.filteredData = [...data];
-        buildSuggestions(data);
-        sortData();
-        renderTable();
-      } catch (error) {
-        els.tbody.innerHTML = '<tr><td colspan="11">No se ha podido cargar data/index_es.json</td></tr>';
-        console.error(error);
-      }
+  try {
+    const response = await fetch('./data/index_es.json?ts=' + Date.now());
+    const payload = await response.json();
+
+    const data = payload.data || [];
+    state.rawData = data;
+    state.filteredData = [...data];
+
+    const updatedEl = document.getElementById('indexUpdated');
+    if (updatedEl && payload.updated_at) {
+      updatedEl.textContent = `Índice actualizado: ${payload.updated_at} · ${payload.n_tables ?? data.length} tablas`;
     }
+
+    buildSuggestions(data);
+    sortData();
+    renderTable();
+  } catch (error) {
+    els.tbody.innerHTML = '<tr><td colspan="11">No se ha podido cargar data/index_es.json</td></tr>';
+    console.error(error);
+  }
+}
 
     els.updateBtn.addEventListener('click', applyFilters);
     els.pageSize.addEventListener('change', () => {
