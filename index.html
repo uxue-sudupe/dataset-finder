@@ -52,8 +52,7 @@
     .hero {
       padding: 24px 24px 16px;
       border-bottom: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
     }
 
     h1 {
@@ -103,7 +102,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(260px, 0.95fr) minmax(260px, 1.15fr) minmax(220px, 0.9fr) auto;
+      grid-template-columns: minmax(240px, 0.95fr) minmax(240px, 1.15fr) minmax(240px, 1.05fr) auto;
       gap: 18px;
       align-items: end;
       padding: 18px 24px 20px;
@@ -204,8 +203,7 @@
       color: #314250;
     }
 
-    .toolbar select,
-    .toolbar input {
+    .toolbar select {
       height: 34px;
       border: 1px solid #cfd8e3;
       border-radius: 8px;
@@ -526,9 +524,10 @@
         </div>
 
         <div class="field">
-          <label for="titleSearch">Buscar por nombre de la tabla</label>
-          <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
-          <datalist id="titleSuggestions"></datalist>
+          <label for="titleSearch">Nombre de la tabla</label>
+          <select id="titleSearch">
+            <option value="">Todas las tablas</option>
+          </select>
         </div>
 
         <div class="field">
@@ -662,7 +661,6 @@
     const els = {
       operationSearch: document.getElementById('operationSearch'),
       titleSearch: document.getElementById('titleSearch'),
-      titleSuggestions: document.getElementById('titleSuggestions'),
       globalSearch: document.getElementById('globalSearch'),
       pageSize: document.getElementById('pageSize'),
       tbody: document.querySelector('#resultsTable tbody'),
@@ -714,18 +712,20 @@
       URL.revokeObjectURL(url);
     }
 
-    function buildSuggestions(data) {
-      const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-      const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    function buildSelectors(data) {
+      const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
 
-      els.titleSuggestions.innerHTML = titles
-        .slice(0, 800)
-        .map(title => `<option value="${escapeHtml(title)}"></option>`)
-        .join('');
+      const titles = [...new Set(data.map(d => d.title).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
 
       els.operationSearch.innerHTML =
         `<option value="">Todas las operaciones</option>` +
         operations.map(op => `<option value="${escapeHtml(op)}">${escapeHtml(op)}</option>`).join('');
+
+      els.titleSearch.innerHTML =
+        `<option value="">Todas las tablas</option>` +
+        titles.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
     }
 
     function matchesOperation(row, operationValue) {
@@ -733,9 +733,9 @@
       return normalizeText(row.operacion_titulo) === normalizeText(operationValue);
     }
 
-    function matchesTitle(row, titleTerm) {
-      if (!titleTerm) return true;
-      return normalizeText(row.title).includes(titleTerm);
+    function matchesTitle(row, titleValue) {
+      if (!titleValue) return true;
+      return normalizeText(row.title) === normalizeText(titleValue);
     }
 
     function matchesGlobal(row, term) {
@@ -790,16 +790,20 @@
 
     function applyFilters() {
       const operationValue = els.operationSearch.value;
-      const titleTerm = normalizeText(els.titleSearch.value);
+      const titleValue = els.titleSearch.value;
       const globalTerm = normalizeText(els.globalSearch.value);
 
-      state.filteredData = state.rawData.filter(row => {
+      let baseData = state.rawData.filter(row => {
         if (!matchesOperation(row, operationValue)) return false;
-        if (!matchesTitle(row, titleTerm)) return false;
-        if (!matchesGlobal(row, globalTerm)) return false;
+        if (!matchesTitle(row, titleValue)) return false;
         return true;
       });
 
+      if (globalTerm) {
+        baseData = baseData.filter(row => matchesGlobal(row, globalTerm));
+      }
+
+      state.filteredData = baseData;
       sortData();
       state.currentPage = 1;
       renderTable();
@@ -1031,7 +1035,7 @@
         state.filteredData = [...data];
 
         renderIndexMeta(Array.isArray(payload) ? {} : payload, data);
-        buildSuggestions(data);
+        buildSelectors(data);
         sortData();
         renderTable();
 
@@ -1043,7 +1047,7 @@
     }
 
     els.operationSearch.addEventListener('change', applyFilters);
-    els.titleSearch.addEventListener('input', applyFilters);
+    els.titleSearch.addEventListener('change', applyFilters);
     els.globalSearch.addEventListener('input', applyFilters);
 
     els.pageSize.addEventListener('change', () => {
