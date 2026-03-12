@@ -270,12 +270,19 @@ cat("Número de tablas:", nrow(index_es), "\n")
 
 dir.create("data", showWarnings = FALSE)
 
+index_payload <- list(
+  updated_at = format(Sys.time(), "%d/%m/%Y %H:%M"),
+  n_tables = nrow(index_es),
+  data = index_es
+)
+
 jsonlite::write_json(
-  index_es,
+  index_payload,
   path = "data/index_es.json",
   pretty = TRUE,
   auto_unbox = TRUE,
   na = "null"
 )
+
 
 cat("JSON guardado en data/index_es.json\n")
