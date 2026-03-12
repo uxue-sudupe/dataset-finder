@@ -1,4 +1,3 @@
-
 suppressPackageStartupMessages({
   library(httr)
   library(jsonlite)
@@ -55,10 +54,10 @@ get_json_safe <- function(url) {
   resp <- try(GET(url), silent = TRUE)
   if (inherits(resp, "try-error")) return(NULL)
   if (status_code(resp) != 200) return(NULL)
-  
+
   txt <- content(resp, as = "text", encoding = "UTF-8")
   if (!nzchar(txt)) return(NULL)
-  
+
   tryCatch(
     fromJSON(txt, simplifyVector = FALSE),
     error = function(e) NULL
@@ -68,9 +67,9 @@ get_json_safe <- function(url) {
 get_catalog <- function(lang = "es") {
   url <- paste0(base_url, "/", lang, "/DB")
   out <- get_json_safe(url)
-  
+
   if (is.null(out)) stop("No se pudo leer el catálogo")
-  
+
   tibble(
     id = map_chr(out, ~ .x$id %||% NA_character_),
     type = map_chr(out, ~ .x$type %||% NA_character_),
@@ -87,18 +86,17 @@ get_metadata <- function(tabla_id, lang = "es") {
 # --------- EXTRAER dominio_code ---------
 
 extract_domain_code <- function(id) {
-  x <- str_match(id, "^PX_(?:[^_]*_)?([^_]+)")[,2]
+  x <- str_match(id, "^PX_(?:[^_]*_)?([^_]+)")[, 2]
   ifelse(is.na(x), NA_character_, x)
 }
 
 # --------- RANGO TEMPORAL ---------
 
 extract_time_range <- function(metadata) {
-  
   vars <- metadata$variables %||% list()
-  
+
   time_var <- keep(vars, ~ isTRUE(.x$time %||% FALSE))
-  
+
   if (length(time_var) == 0) {
     return(list(
       time_var = NA_character_,
@@ -106,12 +104,13 @@ extract_time_range <- function(metadata) {
       last_period = NA_character_
     ))
   }
-  
+
   tv <- time_var[[1]]
-  
+
   vals <- tv$valueTexts %||% tv$values %||% character(0)
   vals <- as.character(unlist(vals))
-  
+  vals <- vals[!is.na(vals) & nzchar(vals)]
+
   if (length(vals) == 0) {
     return(list(
       time_var = tv$text %||% tv$code %||% NA_character_,
@@ -119,7 +118,7 @@ extract_time_range <- function(metadata) {
       last_period = NA_character_
     ))
   }
-  
+
   list(
     time_var = tv$text %||% tv$code %||% NA_character_,
     first_period = vals[1],
@@ -130,25 +129,67 @@ extract_time_range <- function(metadata) {
 # --------- DETECTAR FRECUENCIA ---------
 
 detect_frequency <- function(metadata) {
-  
   vars <- metadata$variables %||% list()
-  
+
+  if (length(vars) == 0) {
+    return(NA_character_)
+  }
+
   var_names <- map_chr(vars, ~ tolower(.x$text %||% .x$code %||% ""))
-  
-  if (any(str_detect(var_names, "mes|month"))) return("mensual")
-  if (any(str_detect(var_names, "trimestre|quarter"))) return("trimestral")
-  
-  if (any(map_lgl(vars, ~ isTRUE(.x$time %||% FALSE)))) return("anual")
-  
+  var_names <- str_squish(var_names)
+
+  # 1) Prioridad por nombre explícito de variable
+  # mensual gana sobre trimestral y anual
+  if (any(str_detect(var_names, "\\bmes\\b|\\bmonth\\b"))) {
+    return("mensual")
+  }
+
+  if (any(str_detect(var_names, "\\btrimestre\\b|\\bquarter\\b"))) {
+    return("trimestral")
+  }
+
+  # 2) Buscar la variable temporal
+  time_var <- keep(vars, ~ isTRUE(.x$time %||% FALSE))
+
+  if (length(time_var) == 0) {
+    return(NA_character_)
+  }
+
+  tv <- time_var[[1]]
+
+  vals <- tv$valueTexts %||% tv$values %||% character(0)
+  vals <- as.character(unlist(vals))
+  vals <- vals[!is.na(vals) & nzchar(vals)]
+  vals <- str_squish(vals)
+
+  if (length(vals) == 0) {
+    return(NA_character_)
+  }
+
+  # 3) Detectar patrones
+  # mensual: 2024-01, 2024/01, 2024M01
+  has_month <- any(str_detect(vals, "^\\d{4}[-/]?(0[1-9]|1[0-2])$")) ||
+    any(str_detect(vals, "^\\d{4}[Mm](0[1-9]|1[0-2])$"))
+
+  # trimestral: 2024-4, 2024/4, 2024Q4, 2024T4
+  has_quarter <- any(str_detect(vals, "^\\d{4}[-/]?[1-4]$")) ||
+    any(str_detect(vals, "^\\d{4}[QqTt][1-4]$"))
+
+  # anual: 2024
+  all_year <- all(str_detect(vals, "^\\d{4}$"))
+
+  if (has_month) return("mensual")
+  if (has_quarter) return("trimestral")
+  if (all_year) return("anual")
+
   NA_character_
 }
 
 # --------- LIMPIAR PALABRAS ---------
 
 clean_tokens <- function(x) {
-  
   if (length(x) == 0 || all(is.na(x))) return(character(0))
-  
+
   x |>
     tolower() |>
     str_replace_all("[[:punct:]]", " ") |>
@@ -161,30 +202,27 @@ clean_tokens <- function(x) {
 # --------- CONSTRUIR INDICE ---------
 
 build_index_one_lang <- function(lang = "es", sleep_sec = 0.05, max_tables = NULL) {
-  
   catalog <- get_catalog(lang)
-  
+
   if (!is.null(max_tables)) {
     catalog <- head(catalog, max_tables)
   }
-  
+
   rows <- map(seq_len(nrow(catalog)), function(i) {
-    
     id <- catalog$id[i]
     cat_title <- catalog$text[i]
     updated <- catalog$updated[i]
     type <- catalog$type[i]
-    
+
     dominio_code <- extract_domain_code(id)
-    
+
     cat(sprintf("[%s] Tabla %d de %d: %s\n", lang, i, nrow(catalog), id))
-    
+
     meta <- get_metadata(id, lang)
-    
+
     Sys.sleep(sleep_sec)
-    
+
     if (is.null(meta)) {
-      
       return(tibble(
         lang = lang,
         id = id,
@@ -204,21 +242,20 @@ build_index_one_lang <- function(lang = "es", sleep_sec = 0.05, max_tables = NUL
         metadata_ok = FALSE
       ))
     }
-    
+
     vars <- meta$variables %||% list()
-    
+
     var_names <- map_chr(vars, ~ .x$text %||% .x$code %||% NA_character_)
     var_names <- var_names[!is.na(var_names)]
-    
+
     rng <- extract_time_range(meta)
-    
     frecuencia <- detect_frequency(meta)
-    
+
     kws <- unique(c(
       clean_tokens(meta$title %||% cat_title),
       clean_tokens(var_names)
     ))
-    
+
     tibble(
       lang = lang,
       id = id,
@@ -242,7 +279,7 @@ build_index_one_lang <- function(lang = "es", sleep_sec = 0.05, max_tables = NUL
       metadata_ok = TRUE
     )
   })
-  
+
   index_df <- bind_rows(rows) %>%
     left_join(maestro_dom, by = "dominio_code") %>%
     mutate(
@@ -252,7 +289,7 @@ build_index_one_lang <- function(lang = "es", sleep_sec = 0.05, max_tables = NUL
         coalesce(operacion_titulo, "")
       )
     )
-  
+
   index_df
 }
 
@@ -263,7 +300,7 @@ cat("Construyendo índice...\n")
 index_es <- build_index_one_lang(
   lang = "es",
   sleep_sec = 0.05
-  # max_tables = 20   # activar para probar rápido
+  # max_tables = 20
 )
 
 cat("Número de tablas:", nrow(index_es), "\n")
@@ -283,6 +320,5 @@ jsonlite::write_json(
   auto_unbox = TRUE,
   na = "null"
 )
-
 
 cat("JSON guardado en data/index_es.json\n")
