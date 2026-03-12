@@ -11,12 +11,15 @@
     :root {
       --blue: #2f79b7;
       --blue-dark: #26689f;
-      --line: #e5e5e5;
-      --line-2: #d9d9d9;
-      --text: #222;
-      --muted: #666;
-      --head-bg: #fafafa;
-      --stripe: #f7f7f7;
+      --line: #e6e8eb;
+      --line-2: #d8dde3;
+      --text: #1f2933;
+      --muted: #5f6b76;
+      --head-bg: #fafbfc;
+      --stripe: #f7f8fa;
+      --page-bg: #f3f5f7;
+      --card: #ffffff;
+      --shadow: 0 8px 30px rgba(17, 24, 39, 0.08);
       --modal-border: #5f8f8d;
       --tab-bg: #eaf2f2;
       --tab-active: #6b9c9a;
@@ -29,28 +32,64 @@
       font-family: "Open Sans", Arial, sans-serif;
       font-size: 14px;
       color: var(--text);
-      background: white;
+      background: var(--page-bg);
     }
 
     .page {
-      max-width: 1700px;
-      margin: 0 auto;
-      padding: 8px 16px 24px;
+      max-width: 1760px;
+      margin: 24px auto;
+      padding: 0 18px 28px;
+    }
+
+    .shell {
+      background: var(--card);
+      border: 1px solid #e8edf2;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
     }
 
     h1 {
-      margin: 0 0 4px;
-      font-size: 26px;
+      margin: 0 0 6px;
+      font-size: 30px;
       font-weight: 400;
-      color: #1f1f1f;
+      color: #14202b;
+      letter-spacing: -0.02em;
     }
 
     .subline {
       color: var(--muted);
-      margin-bottom: 22px;
+      margin-bottom: 8px;
+      line-height: 1.5;
     }
 
-    .subline a,
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f5f8fb;
+      border: 1px solid #e1e8ef;
+    }
+
     a,
     .linkish {
       color: #2b6cb0;
@@ -58,48 +97,67 @@
     }
 
     a:hover,
-    .linkish:hover,
-    .subline a:hover {
+    .linkish:hover {
       text-decoration: underline;
-    }
-
-    .help {
-      margin: 0 0 10px;
-      line-height: 1.45;
     }
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(220px, 1.15fr) minmax(220px, 1.15fr) minmax(220px, 1.15fr) 150px 190px;
-      gap: 24px;
+      grid-template-columns: minmax(260px, 0.95fr) minmax(260px, 1.15fr) minmax(220px, 0.9fr) auto;
+      gap: 18px;
       align-items: end;
-      margin: 10px 0 20px;
+      padding: 18px 24px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fcfdfe;
     }
 
     .field label {
       display: block;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       margin-bottom: 8px;
       line-height: 1.35;
+      color: #314250;
+      letter-spacing: 0.01em;
     }
 
     .field input,
     .field select {
       width: 100%;
-      height: 34px;
-      border: 1px solid #cfcfcf;
-      border-radius: 4px;
-      padding: 6px 10px;
+      height: 40px;
+      border: 1px solid #cfd8e3;
+      border-radius: 8px;
+      padding: 8px 12px;
       font: inherit;
       background: #fff;
+      color: var(--text);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .button-col {
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: #8fb5d8;
+      box-shadow: 0 0 0 3px rgba(47, 121, 183, 0.12);
+    }
+
+    .downloads {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      justify-content: flex-end;
+      gap: 8px;
+      min-width: 180px;
+    }
+
+    .downloads-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #314250;
+    }
+
+    .download-menu {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -107,41 +165,34 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 32px;
-      padding: 10px 14px;
-      border: 1px solid #bfcddd;
-      border-radius: 4px;
+      min-height: 38px;
+      padding: 8px 14px;
+      border: 1px solid #cfd8e3;
+      border-radius: 8px;
       background: white;
-      color: #2a2a2a;
+      color: #25323d;
       font: inherit;
       cursor: pointer;
       text-decoration: none;
       white-space: nowrap;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
     }
 
-    .btn.primary {
-      background: var(--blue);
-      color: white;
-      border-color: var(--blue-dark);
-      min-height: 48px;
+    .btn:hover {
+      background: #f6f9fc;
+      border-color: #bed0e1;
     }
 
-    .btn.primary:hover { background: var(--blue-dark); }
-    .btn:hover { background: #f6f6f6; }
-
-    .btn[disabled] {
-      opacity: 0.55;
-      cursor: not-allowed;
+    .btn:active {
+      transform: translateY(1px);
     }
 
     .toolbar {
-      border-top: 1px solid var(--line);
-      padding-top: 18px;
+      padding: 14px 24px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
@@ -150,28 +201,31 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #222;
+      color: #314250;
     }
 
     .toolbar select,
     .toolbar input {
-      height: 30px;
-      border: 1px solid #cfcfcf;
-      border-radius: 4px;
-      padding: 4px 8px;
+      height: 34px;
+      border: 1px solid #cfd8e3;
+      border-radius: 8px;
+      padding: 6px 10px;
       font: inherit;
       background: white;
     }
 
     .table-wrap {
+      width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
       border-top: 1px solid var(--line);
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
+      min-width: 1600px;
       border-collapse: collapse;
-      min-width: 1420px;
     }
 
     thead th {
@@ -179,15 +233,16 @@
       top: 0;
       background: var(--head-bg);
       border-bottom: 1px solid var(--line-2);
-      border-right: 1px solid #efefef;
+      border-right: 1px solid #edf1f4;
       text-align: left;
       vertical-align: bottom;
       padding: 12px 10px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 13px;
-      color: #1f1f1f;
+      color: #213140;
       cursor: pointer;
       user-select: none;
+      white-space: nowrap;
     }
 
     thead th:last-child,
@@ -219,14 +274,20 @@
     }
 
     .sort-ind {
-      color: #bdbdbd;
+      color: #b9c0c7;
       font-size: 11px;
       margin-left: 6px;
     }
 
     .dataset-title {
       font-weight: 700;
-      max-width: 440px;
+      max-width: 520px;
+    }
+
+    .dataset-sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
     }
 
     .tag {
@@ -246,14 +307,13 @@
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      padding-top: 14px;
+      padding: 14px 24px 22px;
       flex-wrap: wrap;
     }
 
-    .download-menu {
+    .pagination-actions {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
     .modal-backdrop {
@@ -278,6 +338,7 @@
       background: #fff;
       border: 1px solid #cfcfcf;
       box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      border-radius: 12px;
     }
 
     .modal-header {
@@ -326,6 +387,8 @@
       cursor: pointer;
       font: inherit;
       font-weight: 600;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
 
     .api-tab.active {
@@ -338,6 +401,7 @@
       border: 1px solid var(--modal-border);
       padding: 12px;
       background: #fff;
+      border-radius: 8px;
     }
 
     .api-panel.active {
@@ -369,7 +433,7 @@
       position: relative;
       border: 1px solid #ddd;
       background: #f7f7f7;
-      border-radius: 3px;
+      border-radius: 8px;
       overflow: hidden;
     }
 
@@ -377,10 +441,12 @@
       margin: 0;
       padding: 14px 16px;
       overflow: auto;
-      font-size: 15px;
-      line-height: 1.45;
+      font-size: 14px;
+      line-height: 1.5;
       font-family: Consolas, Monaco, monospace;
       background: #f8f8f8;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .copy-btn {
@@ -389,7 +455,7 @@
       right: 8px;
       border: 1px solid #cfcfcf;
       background: white;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       padding: 6px 9px;
       font-size: 12px;
@@ -401,22 +467,41 @@
       padding-top: 14px;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1280px) {
       .controls {
         grid-template-columns: 1fr 1fr;
+      }
+      .downloads {
+        grid-column: span 2;
       }
     }
 
     @media (max-width: 760px) {
+      .page {
+        padding: 10px;
+        margin: 12px auto;
+      }
+
+      .hero,
+      .controls,
+      .toolbar,
+      .pagination {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
       .controls {
         grid-template-columns: 1fr;
       }
-      .page {
-        padding: 12px;
+
+      .downloads {
+        grid-column: auto;
       }
+
       h1 {
-        font-size: 22px;
+        font-size: 24px;
       }
+
       .modal {
         max-height: 94vh;
       }
@@ -425,87 +510,85 @@
 </head>
 <body>
   <div class="page">
-    <h1>Buscador de datasets de Eustat</h1>
-    <div id="indexUpdated" class="subline"></div>
-
-    <p class="help">Puedes buscar por operación estadística, por palabras clave y por nombre de tabla. Las coincidencias no distinguen mayúsculas de minúsculas.</p>
-    <p class="help">Si rellenas más de un cuadro, todos los filtros se aplican a la vez.</p>
-
-    <div class="controls">
-      <div class="field">
-        <label for="operationSearch">Buscar por operación estadística:</label>
-        <input id="operationSearch" list="operationSuggestions" type="text" placeholder="Selecciona o escribe una operación..." />
-        <datalist id="operationSuggestions"></datalist>
+    <div class="shell">
+      <div class="hero">
+        <h1>Buscador de tablas de Eustat</h1>
+        <div class="subline">Catálogo navegable de tablas y metadatos, con acceso rápido a los datos y a la API.</div>
+        <div id="indexUpdated" class="meta-bar"></div>
       </div>
 
-      <div class="field">
-        <label for="keywordSearch">Buscar por palabras clave (en keywords y variables):</label>
-        <input id="keywordSearch" type="text" placeholder="Ej. empleo mujeres" />
-      </div>
+      <div class="controls">
+        <div class="field">
+          <label for="operationSearch">Operación estadística</label>
+          <select id="operationSearch">
+            <option value="">Todas las operaciones</option>
+          </select>
+        </div>
 
-      <div class="field">
-        <label for="titleSearch">Buscar por nombre de la tabla:</label>
-        <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
-        <datalist id="titleSuggestions"></datalist>
-      </div>
+        <div class="field">
+          <label for="titleSearch">Buscar por nombre de la tabla</label>
+          <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Empieza a escribir un título..." />
+          <datalist id="titleSuggestions"></datalist>
+        </div>
 
-      <div class="button-col">
-        <button class="btn primary" id="updateBtn">Actualizar vista</button>
-      </div>
+        <div class="field">
+          <label for="globalSearch">Buscar</label>
+          <input id="globalSearch" type="text" placeholder="Busca en operación, título, variables, keywords..." />
+        </div>
 
-      <div class="button-col">
-        <div>Descargar resultados:</div>
-        <div class="download-menu">
-          <button class="btn" id="downloadExcelBtn" disabled>⬇ Excel</button>
-          <button class="btn" id="downloadJsonBtn" disabled>⬇ JSON</button>
+        <div class="downloads">
+          <div class="downloads-label">Descargar resultados</div>
+          <div class="download-menu">
+            <button class="btn" id="downloadCsvBtn">⬇ CSV</button>
+            <button class="btn" id="downloadJsonBtn">⬇ JSON</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="toolbar">
-      <div class="left">
-        <span>Mostrar</span>
-        <select id="pageSize">
-          <option value="10">10</option>
-          <option value="25" selected>25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-        <span>entradas</span>
+      <div class="toolbar">
+        <div class="left">
+          <span>Mostrar</span>
+          <select id="pageSize">
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entradas</span>
+        </div>
+
+        <div class="right">
+          <span id="summary"></span>
+        </div>
       </div>
 
-      <div class="right">
-        <label for="globalSearch">Buscar:</label>
-        <input id="globalSearch" type="text" />
+      <div class="table-wrap">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th data-sort="rownum">No <span class="sort-ind">↕</span></th>
+              <th data-sort="operacion_titulo">Operación estadística <span class="sort-ind">↕</span></th>
+              <th data-sort="title">Nombre de la tabla <span class="sort-ind">↕</span></th>
+              <th data-sort="frecuencia">Frecuencia <span class="sort-ind">↕</span></th>
+              <th data-sort="first_period">Inicio datos <span class="sort-ind">↕</span></th>
+              <th data-sort="last_period">Fin datos <span class="sort-ind">↕</span></th>
+              <th data-sort="updated">Última actualización <span class="sort-ind">↕</span></th>
+              <th data-sort="variables">Variables <span class="sort-ind">↕</span></th>
+              <th data-sort="pxweb_url">Datos <span class="sort-ind">↕</span></th>
+              <th data-sort="api_url">API <span class="sort-ind">↕</span></th>
+              <th data-sort="url_ficha_metodologica">Ficha metodológica <span class="sort-ind">↕</span></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-    </div>
 
-    <div class="table-wrap">
-      <table id="resultsTable">
-        <thead>
-          <tr>
-            <th data-sort="rownum">No <span class="sort-ind">↕</span></th>
-            <th data-sort="operacion_titulo">Operación estadística <span class="sort-ind">↕</span></th>
-            <th data-sort="title">Nombre de la tabla <span class="sort-ind">↕</span></th>
-            <th data-sort="frecuencia">Frecuencia <span class="sort-ind">↕</span></th>
-            <th data-sort="first_period">Inicio datos <span class="sort-ind">↕</span></th>
-            <th data-sort="last_period">Fin datos <span class="sort-ind">↕</span></th>
-            <th data-sort="updated">Última actualización <span class="sort-ind">↕</span></th>
-            <th data-sort="variables">Variables <span class="sort-ind">↕</span></th>
-            <th data-sort="url_ficha_metodologica">Ficha metodológica <span class="sort-ind">↕</span></th>
-            <th data-sort="api_url">Endpoint API <span class="sort-ind">↕</span></th>
-            <th data-sort="pxweb_url">Datos <span class="sort-ind">↕</span></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="pagination">
-      <div id="summary"></div>
-      <div>
-        <button class="btn" id="prevBtn">Previous</button>
-        <button class="btn" id="nextBtn">Next</button>
+      <div class="pagination">
+        <div></div>
+        <div class="pagination-actions">
+          <button class="btn" id="prevBtn">Anterior</button>
+          <button class="btn" id="nextBtn">Siguiente</button>
+        </div>
       </div>
     </div>
   </div>
@@ -513,11 +596,11 @@
   <div class="modal-backdrop" id="apiModalBackdrop">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
       <div class="modal-header">
-        <div class="modal-title" id="apiModalTitle">API Data Query</div>
+        <div class="modal-title" id="apiModalTitle">Consulta API</div>
         <button class="modal-close" id="apiModalClose" aria-label="Cerrar">✕</button>
       </div>
       <div class="modal-body">
-        <p class="modal-help">A continuación seleccione el tipo de consulta que desea realizar:</p>
+        <p class="modal-help">Seleccione el tipo de consulta que desea realizar.</p>
 
         <div class="api-tabs">
           <button class="api-tab active" data-tab="get">GET — metadatos</button>
@@ -530,7 +613,7 @@
             Esta consulta permite obtener los <b>metadatos de la tabla</b>
             (variables, valores disponibles, periodos, etc.).
           </p>
-          <div class="api-label">Url de consulta:</div>
+          <div class="api-label">URL de consulta</div>
           <div class="code-box">
             <button class="copy-btn" data-copy-target="getUrlCode">Copiar</button>
             <pre id="getUrlCode"></pre>
@@ -546,13 +629,13 @@
             <a href="https://github.com/eustat/API-Eustat" target="_blank" rel="noopener">documentación de la API de Eustat</a>.
           </p>
 
-          <div class="api-label">Url de consulta:</div>
+          <div class="api-label">URL de consulta</div>
           <div class="code-box" style="margin-bottom: 12px;">
             <button class="copy-btn" data-copy-target="postUrlCode">Copiar</button>
             <pre id="postUrlCode"></pre>
           </div>
 
-          <div class="api-label">Body JSON:</div>
+          <div class="api-label">Body JSON</div>
           <div class="code-box">
             <button class="copy-btn" data-copy-target="postBodyCode">Copiar</button>
             <pre id="postBodyCode"></pre>
@@ -578,17 +661,17 @@
 
     const els = {
       operationSearch: document.getElementById('operationSearch'),
-      operationSuggestions: document.getElementById('operationSuggestions'),
-      keywordSearch: document.getElementById('keywordSearch'),
       titleSearch: document.getElementById('titleSearch'),
       titleSuggestions: document.getElementById('titleSuggestions'),
       globalSearch: document.getElementById('globalSearch'),
       pageSize: document.getElementById('pageSize'),
-      updateBtn: document.getElementById('updateBtn'),
       tbody: document.querySelector('#resultsTable tbody'),
       summary: document.getElementById('summary'),
       prevBtn: document.getElementById('prevBtn'),
       nextBtn: document.getElementById('nextBtn'),
+      downloadCsvBtn: document.getElementById('downloadCsvBtn'),
+      downloadJsonBtn: document.getElementById('downloadJsonBtn'),
+      indexUpdated: document.getElementById('indexUpdated'),
       apiModalBackdrop: document.getElementById('apiModalBackdrop'),
       apiModalClose: document.getElementById('apiModalClose'),
       modalCloseBtn: document.getElementById('modalCloseBtn'),
@@ -605,10 +688,6 @@
         .trim();
     }
 
-    function splitTerms(value) {
-      return normalizeText(value).split(/\s+/).filter(Boolean);
-    }
-
     function arrayToDisplay(value) {
       if (Array.isArray(value)) return value.join(', ');
       return value ?? '';
@@ -623,58 +702,64 @@
         .replace(/'/g, '&#039;');
     }
 
+    function downloadBlob(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
     function buildSuggestions(data) {
       const titles = [...new Set(data.map(d => d.title).filter(Boolean))].sort((a, b) => a.localeCompare(b));
       const operations = [...new Set(data.map(d => d.operacion_titulo).filter(Boolean))].sort((a, b) => a.localeCompare(b));
 
-      els.titleSuggestions.innerHTML = titles.slice(0, 500).map(title => `<option value="${escapeHtml(title)}"></option>`).join('');
-      els.operationSuggestions.innerHTML = operations.map(op => `<option value="${escapeHtml(op)}"></option>`).join('');
+      els.titleSuggestions.innerHTML = titles
+        .slice(0, 800)
+        .map(title => `<option value="${escapeHtml(title)}"></option>`)
+        .join('');
+
+      els.operationSearch.innerHTML =
+        `<option value="">Todas las operaciones</option>` +
+        operations.map(op => `<option value="${escapeHtml(op)}">${escapeHtml(op)}</option>`).join('');
     }
 
-    function matchesOperation(row, term) {
-      return normalizeText(row.operacion_titulo).includes(term);
+    function matchesOperation(row, operationValue) {
+      if (!operationValue) return true;
+      return normalizeText(row.operacion_titulo) === normalizeText(operationValue);
     }
 
-    function matchesKeywords(row, terms) {
-      const haystack = [row.keywords, arrayToDisplay(row.variables), row.search_text].map(normalizeText).join(' ');
-      return terms.every(t => haystack.includes(t));
-    }
-
-    function matchesTitle(row, term) {
-      return normalizeText(row.title).includes(term);
+    function matchesTitle(row, titleTerm) {
+      if (!titleTerm) return true;
+      return normalizeText(row.title).includes(titleTerm);
     }
 
     function matchesGlobal(row, term) {
+      if (!term) return true;
+
       const haystack = [
         row.title,
         row.operacion_titulo,
         row.keywords,
         arrayToDisplay(row.variables),
+        row.search_text,
         row.first_period,
         row.last_period,
         row.frecuencia,
         row.updated
       ].map(normalizeText).join(' ');
+
       return haystack.includes(term);
     }
 
-    function applyFilters() {
-      const operationTerm = normalizeText(els.operationSearch.value);
-      const keywordTerms = splitTerms(els.keywordSearch.value);
-      const titleTerm = normalizeText(els.titleSearch.value);
-      const globalTerm = normalizeText(els.globalSearch.value);
-
-      state.filteredData = state.rawData.filter(row => {
-        if (operationTerm && !matchesOperation(row, operationTerm)) return false;
-        if (keywordTerms.length && !matchesKeywords(row, keywordTerms)) return false;
-        if (titleTerm && !matchesTitle(row, titleTerm)) return false;
-        if (globalTerm && !matchesGlobal(row, globalTerm)) return false;
-        return true;
-      });
-
-      sortData();
-      state.currentPage = 1;
-      renderTable();
+    function parseDateValue(value) {
+      const date = new Date(value);
+      const time = date.getTime();
+      return Number.isNaN(time) ? null : time;
     }
 
     function sortData() {
@@ -682,6 +767,15 @@
       const factor = sortDir === 'asc' ? 1 : -1;
 
       state.filteredData.sort((a, b) => {
+        if (sortKey === 'updated') {
+          const av = parseDateValue(a.updated);
+          const bv = parseDateValue(b.updated);
+          if (av === null && bv === null) return 0;
+          if (av === null) return 1;
+          if (bv === null) return -1;
+          return (av - bv) * factor;
+        }
+
         let av = sortKey === 'variables' ? arrayToDisplay(a.variables) : (a[sortKey] ?? '');
         let bv = sortKey === 'variables' ? arrayToDisplay(b.variables) : (b[sortKey] ?? '');
 
@@ -692,6 +786,23 @@
         if (av > bv) return 1 * factor;
         return 0;
       });
+    }
+
+    function applyFilters() {
+      const operationValue = els.operationSearch.value;
+      const titleTerm = normalizeText(els.titleSearch.value);
+      const globalTerm = normalizeText(els.globalSearch.value);
+
+      state.filteredData = state.rawData.filter(row => {
+        if (!matchesOperation(row, operationValue)) return false;
+        if (!matchesTitle(row, titleTerm)) return false;
+        if (!matchesGlobal(row, globalTerm)) return false;
+        return true;
+      });
+
+      sortData();
+      state.currentPage = 1;
+      renderTable();
     }
 
     function renderVariableTags(variables) {
@@ -706,20 +817,34 @@
 
       els.tbody.innerHTML = pageRows.map((row, idx) => {
         const rownum = start + idx + 1;
-        const apiLabel = row.api_url ? `<a href="#" class="api-link" data-api-url="${escapeHtml(row.api_url)}">api</a>` : '';
+        const apiLabel = row.api_url
+          ? `<a href="#" class="api-link" data-api-url="${escapeHtml(row.api_url)}">api</a>`
+          : '';
+
+        const datosLabel = row.pxweb_url
+          ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">datos</a>`
+          : '';
+
+        const fichaLabel = row.url_ficha_metodologica
+          ? `<a href="${row.url_ficha_metodologica}" target="_blank" rel="noopener">ficha</a>`
+          : '';
+
         return `
           <tr>
             <td>${rownum}</td>
             <td>${escapeHtml(row.operacion_titulo || '')}</td>
-            <td><div class="dataset-title">${escapeHtml(row.title || '')}</div></td>
+            <td>
+              <div class="dataset-title">${escapeHtml(row.title || '')}</div>
+              <div class="dataset-sub">${escapeHtml(row.id || '')}</div>
+            </td>
             <td>${escapeHtml(row.frecuencia || '')}</td>
             <td>${escapeHtml(row.first_period || '')}</td>
             <td>${escapeHtml(row.last_period || '')}</td>
             <td>${escapeHtml(row.updated || '')}</td>
             <td>${renderVariableTags(row.variables)}</td>
-            <td>${row.url_ficha_metodologica ? `<a href="${row.url_ficha_metodologica}" target="_blank" rel="noopener">ficha</a>` : ''}</td>
+            <td>${datosLabel}</td>
             <td>${apiLabel}</td>
-            <td>${row.pxweb_url ? `<a href="${row.pxweb_url}" target="_blank" rel="noopener">datos</a>` : ''}</td>
+            <td>${fichaLabel}</td>
           </tr>
         `;
       }).join('');
@@ -743,7 +868,7 @@
             state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
           } else {
             state.sortKey = key;
-            state.sortDir = 'asc';
+            state.sortDir = key === 'updated' ? 'desc' : 'asc';
           }
           sortData();
           renderTable();
@@ -814,41 +939,126 @@
       });
     }
 
-    async function loadData() {
-  try {
-    const response = await fetch('./data/index_es.json?ts=' + Date.now());
-    const payload = await response.json();
-
-    const data = payload.data || [];
-    state.rawData = data;
-    state.filteredData = [...data];
-
-    const updatedEl = document.getElementById('indexUpdated');
-    if (updatedEl && payload.updated_at) {
-      updatedEl.textContent = `Índice actualizado: ${payload.updated_at} · ${payload.n_tables ?? data.length} tablas`;
+    function prepareDownloadRows(rows) {
+      return rows.map(row => ({
+        lang: row.lang ?? '',
+        id: row.id ?? '',
+        operacion_titulo: row.operacion_titulo ?? '',
+        title: row.title ?? '',
+        frecuencia: row.frecuencia ?? '',
+        first_period: row.first_period ?? '',
+        last_period: row.last_period ?? '',
+        updated: row.updated ?? '',
+        variables: arrayToDisplay(row.variables),
+        keywords: row.keywords ?? '',
+        api_url: row.api_url ?? '',
+        pxweb_url: row.pxweb_url ?? '',
+        url_ficha_metodologica: row.url_ficha_metodologica ?? ''
+      }));
     }
 
-    buildSuggestions(data);
-    sortData();
-    renderTable();
-  } catch (error) {
-    els.tbody.innerHTML = '<tr><td colspan="11">No se ha podido cargar data/index_es.json</td></tr>';
-    console.error(error);
-  }
-}
+    function downloadFilteredJson() {
+      const rows = prepareDownloadRows(state.filteredData);
+      const payload = {
+        exported_at: new Date().toISOString(),
+        n_rows: rows.length,
+        data: rows
+      };
+      downloadBlob(
+        JSON.stringify(payload, null, 2),
+        'eustat_resultados.json',
+        'application/json;charset=utf-8'
+      );
+    }
 
-    els.updateBtn.addEventListener('click', applyFilters);
+    function toCsvValue(value) {
+      const text = String(value ?? '');
+      if (/[",\n;]/.test(text)) {
+        return `"${text.replace(/"/g, '""')}"`;
+      }
+      return text;
+    }
+
+    function downloadFilteredCsv() {
+      const rows = prepareDownloadRows(state.filteredData);
+      const headers = [
+        'lang',
+        'id',
+        'operacion_titulo',
+        'title',
+        'frecuencia',
+        'first_period',
+        'last_period',
+        'updated',
+        'variables',
+        'keywords',
+        'api_url',
+        'pxweb_url',
+        'url_ficha_metodologica'
+      ];
+
+      const csv = [
+        headers.join(','),
+        ...rows.map(row => headers.map(h => toCsvValue(row[h])).join(','))
+      ].join('\n');
+
+      downloadBlob(
+        csv,
+        'eustat_resultados.csv',
+        'text/csv;charset=utf-8'
+      );
+    }
+
+    function renderIndexMeta(payload, data) {
+      const parts = [];
+
+      if (payload.updated_at) {
+        parts.push(`<span class="meta-pill">Índice actualizado: ${escapeHtml(payload.updated_at)}</span>`);
+      }
+
+      parts.push(`<span class="meta-pill">${data.length} tablas cargadas</span>`);
+
+      els.indexUpdated.innerHTML = parts.join('');
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch('./data/index_es.json?ts=' + Date.now());
+        const payload = await response.json();
+
+        const data = Array.isArray(payload) ? payload : (payload.data || []);
+        state.rawData = data;
+        state.filteredData = [...data];
+
+        renderIndexMeta(Array.isArray(payload) ? {} : payload, data);
+        buildSuggestions(data);
+        sortData();
+        renderTable();
+
+      } catch (error) {
+        els.tbody.innerHTML =
+          '<tr><td colspan="11">No se ha podido cargar data/index_es.json</td></tr>';
+        console.error(error);
+      }
+    }
+
+    els.operationSearch.addEventListener('change', applyFilters);
+    els.titleSearch.addEventListener('input', applyFilters);
+    els.globalSearch.addEventListener('input', applyFilters);
+
     els.pageSize.addEventListener('change', () => {
       state.pageSize = Number(els.pageSize.value);
       state.currentPage = 1;
       renderTable();
     });
+
     els.prevBtn.addEventListener('click', () => {
       if (state.currentPage > 1) {
         state.currentPage -= 1;
         renderTable();
       }
     });
+
     els.nextBtn.addEventListener('click', () => {
       const maxPage = Math.ceil(state.filteredData.length / state.pageSize);
       if (state.currentPage < maxPage) {
@@ -856,8 +1066,9 @@
         renderTable();
       }
     });
-    els.globalSearch.addEventListener('input', applyFilters);
-    els.titleSearch.addEventListener('change', applyFilters);
+
+    els.downloadJsonBtn.addEventListener('click', downloadFilteredJson);
+    els.downloadCsvBtn.addEventListener('click', downloadFilteredCsv);
 
     bindSorting();
     bindModal();
