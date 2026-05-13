@@ -1,6 +1,6 @@
 {
-  "updated_at": "12/05/2026 21:37",
-  "n_tables": 2305,
+  "updated_at": "13/05/2026 21:41",
+  "n_tables": 2306,
   "data": [
     {
       "lang": "es",
@@ -26083,6 +26083,27 @@
       "operacion_code": "050404",
       "operacion_titulo": "Censo del mercado de trabajo",
       "url_ficha_metodologica": null
+    },
+    {
+      "lang": "es",
+      "id": "PX_112311_cindus_ind_a_11.px",
+      "dominio_code": "cindus",
+      "type": "t",
+      "title": "Personal ocupado de la industria de la C.A. de Euskadi por sexo, actividad (A38) y territorio histórico (%). 2009 - 2024",
+      "updated": "2026-05-13T09:12:50",
+      "variables": ["territorio histórico", "sector A38", "sexo", "periodo"],
+      "time_var": "periodo",
+      "first_period": "2009",
+      "last_period": "2024",
+      "frecuencia": "anual",
+      "keywords": "personal, ocupado, industria, euskadi, por, sexo, actividad, a38, territorio, histórico, 2009, 2024, sector, periodo",
+      "search_text": "personal ocupado de la industria de la c.a. de euskadi por sexo, actividad (a38) y territorio histórico (%). 2009 - 2024 territorio histórico sector a38 sexo periodo personal ocupado industria euskadi por sexo actividad a38 territorio histórico 2009 2024 sector periodo 112311 Encuesta industrial",
+      "api_url": "https://www.eustat.eus/bankupx/api/v1/es/DB/PX_112311_cindus_ind_a_11.px",
+      "pxweb_url": "https://www.eustat.eus/bankupx/pxweb/es/DB/-/PX_112311_cindus_ind_a_11.px",
+      "metadata_ok": true,
+      "operacion_code": "112311",
+      "operacion_titulo": "Encuesta industrial",
+      "url_ficha_metodologica": "https://es.eustat.eus/document/datos/fm_112311_c.html"
     },
     {
       "lang": "es",
