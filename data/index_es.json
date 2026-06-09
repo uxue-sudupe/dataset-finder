@@ -1,5 +1,5 @@
 {
-  "updated_at": "08/06/2026 22:02",
+  "updated_at": "09/06/2026 22:00",
   "n_tables": 2311,
   "data": [
     {
@@ -12271,15 +12271,15 @@
       "id": "PX_040601_ceens_mun04b.px",
       "dominio_code": "ceens",
       "type": "t",
-      "title": "Personal docente en enseñanzas de régimen general de la C.A. de Euskadi por municipio, nivel de enseñanza, titularidad del centro, sexo, perfil lingüístico y dedicación. 1994/1995 - 2023/2024",
-      "updated": "2026-03-30T09:26:26",
+      "title": "Personal docente en enseñanzas de régimen general no universitario de la C.A. de Euskadi por municipio, nivel de enseñanza, titularidad del centro, sexo, perfil lingüístico y dedicación. 1994/1995 - 2023/2024",
+      "updated": "2026-06-09T09:09:12",
       "variables": ["municipio", "nivel de enseñanza", "sexo", "perfil lingüístico", "dedicación", "titularidad del centro", "periodo"],
       "time_var": "periodo",
       "first_period": "1994/1995",
       "last_period": "2023/2024",
       "frecuencia": null,
-      "keywords": "personal, docente, enseñanzas, régimen, general, euskadi, por, municipio, nivel, enseñanza, titularidad, del, centro, sexo, perfil, lingüístico, dedicación, 1994, 1995, 2023, 2024, periodo",
-      "search_text": "personal docente en enseñanzas de régimen general de la c.a. de euskadi por municipio, nivel de enseñanza, titularidad del centro, sexo, perfil lingüístico y dedicación. 1994/1995 - 2023/2024 municipio nivel de enseñanza sexo perfil lingüístico dedicación titularidad del centro periodo personal docente enseñanzas régimen general euskadi por municipio nivel enseñanza titularidad del centro sexo perfil lingüístico dedicación 1994 1995 2023 2024 periodo 040601 Estadística de la actividad escolar",
+      "keywords": "personal, docente, enseñanzas, régimen, general, universitario, euskadi, por, municipio, nivel, enseñanza, titularidad, del, centro, sexo, perfil, lingüístico, dedicación, 1994, 1995, 2023, 2024, periodo",
+      "search_text": "personal docente en enseñanzas de régimen general no universitario de la c.a. de euskadi por municipio, nivel de enseñanza, titularidad del centro, sexo, perfil lingüístico y dedicación. 1994/1995 - 2023/2024 municipio nivel de enseñanza sexo perfil lingüístico dedicación titularidad del centro periodo personal docente enseñanzas régimen general universitario euskadi por municipio nivel enseñanza titularidad del centro sexo perfil lingüístico dedicación 1994 1995 2023 2024 periodo 040601 Estadística de la actividad escolar",
       "api_url": "https://www.eustat.eus/bankupx/api/v1/es/DB/PX_040601_ceens_mun04b.px",
       "pxweb_url": "https://www.eustat.eus/bankupx/pxweb/es/DB/-/PX_040601_ceens_mun04b.px",
       "metadata_ok": true,
