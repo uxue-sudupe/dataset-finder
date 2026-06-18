@@ -19,6 +19,7 @@
       nextBtn: document.getElementById('nextBtn'),
       downloadCsvBtn: document.getElementById('downloadCsvBtn'),
       downloadJsonBtn: document.getElementById('downloadJsonBtn'),
+      clearFiltersBtn: document.getElementById('clearFiltersBtn'),
       indexUpdated: document.getElementById('indexUpdated'),
       apiModalBackdrop: document.getElementById('apiModalBackdrop'),
       apiModalClose: document.getElementById('apiModalClose'),
@@ -438,7 +439,6 @@ function renderVariableTags(variables) {
     });
 
     els.titleSearch.addEventListener('change', applyFilters);
-    els.globalSearch.addEventListener('input', applyFilters);
 
     els.pageSize.addEventListener('change', () => {
       state.pageSize = Number(els.pageSize.value);
@@ -464,6 +464,16 @@ function renderVariableTags(variables) {
     els.downloadJsonBtn.addEventListener('click', downloadFilteredJson);
     els.downloadCsvBtn.addEventListener('click', downloadFilteredCsv);
 
+els.clearFiltersBtn.addEventListener('click', () => {
+
+  els.globalSearch.value = '';
+  els.operationSearch.value = '';
+  els.titleSearch.value = '';
+
+  rebuildTitleSuggestions();
+  applyFilters();
+
+});
     bindSorting();
     bindModal();
     loadData();
