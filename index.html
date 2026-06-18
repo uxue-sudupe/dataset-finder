@@ -19,6 +19,11 @@
       </div>
 
       <div class="controls">
+              <div class="field">
+          <label for="globalSearch">Buscar</label>
+          <input id="globalSearch" type="text" placeholder="Busca en operación, título, variables, keywords..." />
+        </div>
+  
         <div class="field">
           <label for="operationSearch">Operación estadística</label>
           <select id="operationSearch">
@@ -27,24 +32,33 @@
         </div>
 
         <div class="field">
-          <label for="titleSearch">Nombre de la tabla</label>
-          <input id="titleSearch" list="titleSuggestions" type="text" placeholder="Todas las tablas o escribe para autocompletar..." />
-          <datalist id="titleSuggestions"></datalist>
+         <label for="titleSearch">Nombre de la tabla</label>
+          <select id="titleSearch">
+         <option value="">Todas las tablas</option>
+           </select>
         </div>
 
-        <div class="field">
-          <label for="globalSearch">Buscar</label>
-          <input id="globalSearch" type="text" placeholder="Busca en operación, título, variables, keywords..." />
-        </div>
 
-        <div class="downloads">
-          <div class="downloads-label">Descargar resultados</div>
-          <div class="download-menu">
-            <button class="btn" id="downloadCsvBtn">⬇ CSV</button>
-            <button class="btn" id="downloadJsonBtn">⬇ JSON</button>
-          </div>
-        </div>
-      </div>
+<div class="downloads">
+  <div class="downloads-label">Descargar resultados</div>
+
+  <div class="download-menu">
+
+    <button class="btn" id="clearFiltersBtn">
+      Limpiar filtros
+    </button>
+
+    <button class="btn" id="downloadCsvBtn">
+      ⬇ CSV
+    </button>
+
+    <button class="btn" id="downloadJsonBtn">
+      ⬇ JSON
+    </button>
+
+  </div>
+
+</div>
 
       <div class="toolbar">
         <div class="left">
