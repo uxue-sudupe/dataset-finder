@@ -11,7 +11,6 @@
     const els = {
       operationSearch: document.getElementById('operationSearch'),
       titleSearch: document.getElementById('titleSearch'),
-      titleSuggestions: document.getElementById('titleSuggestions'),
       globalSearch: document.getElementById('globalSearch'),
       pageSize: document.getElementById('pageSize'),
       tbody: document.querySelector('#resultsTable tbody'),
@@ -72,23 +71,31 @@
         operations.map(op => `<option value="${escapeHtml(op)}">${escapeHtml(op)}</option>`).join('');
     }
 
-    function rebuildTitleSuggestions() {
-      const operationValue = els.operationSearch.value;
+function rebuildTitleSuggestions() {
 
-      let rows = state.rawData;
-      if (operationValue) {
-        rows = rows.filter(row => normalizeText(row.operacion_titulo) === normalizeText(operationValue));
-      }
+  const operationValue = els.operationSearch.value;
 
-      const titles = [...new Set(rows.map(d => d.title).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b));
+  let rows = state.rawData;
 
-      state.titleUniverse = titles;
+  if (operationValue) {
+    rows = rows.filter(
+      row =>
+      normalizeText(row.operacion_titulo) ===
+      normalizeText(operationValue)
+    );
+  }
 
-      els.titleSuggestions.innerHTML = titles
-        .map(title => `<option value="${escapeHtml(title)}"></option>`)
-        .join('');
-    }
+  const titles = [...new Set(
+    rows.map(d => d.title).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b));
+
+  els.titleSearch.innerHTML =
+    '<option value="">Todas las tablas</option>' +
+    titles.map(title =>
+      `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`
+    ).join('');
+
+}
 
     function matchesOperation(row, operationValue) {
       if (!operationValue) return true;
@@ -100,23 +107,31 @@
       return normalizeText(row.title) === normalizeText(titleValue);
     }
 
-    function matchesGlobal(row, term) {
-      if (!term) return true;
+function matchesGlobal(row, term) {
 
-      const haystack = [
-        row.title,
-        row.operacion_titulo,
-        row.keywords,
-        arrayToDisplay(row.variables),
-        row.search_text,
-        row.first_period,
-        row.last_period,
-        row.frecuencia,
-        row.updated
-      ].map(normalizeText).join(' ');
+  if (!term) return true;
 
-      return haystack.includes(term);
-    }
+  const tokens = term.split(/\s+/);
+
+  const haystack = [
+    row.title,
+    row.operacion_titulo,
+    row.keywords,
+    arrayToDisplay(row.variables),
+    row.search_text,
+    row.first_period,
+    row.last_period,
+    row.frecuencia,
+    row.updated
+  ]
+  .map(normalizeText)
+  .join(' ');
+
+  return tokens.every(
+    token => haystack.includes(token)
+  );
+
+}
 
     function parseDateValue(value) {
       const date = new Date(value);
@@ -171,10 +186,17 @@
       renderTable();
     }
 
-    function renderVariableTags(variables) {
-      if (!Array.isArray(variables) || variables.length === 0) return '';
-      return variables.slice(0, 4).map(v => `<span class="tag">${escapeHtml(v)}</span>`).join('');
-    }
+function renderVariableTags(variables) {
+
+  if (!Array.isArray(variables) || variables.length === 0) {
+    return '';
+  }
+
+  return variables
+    .map(v => `<span class="tag">${escapeHtml(v)}</span>`)
+    .join('');
+
+}
 
     function renderTable() {
       const start = (state.currentPage - 1) * state.pageSize;
@@ -415,7 +437,6 @@
       applyFilters();
     });
 
-    els.titleSearch.addEventListener('input', applyFilters);
     els.titleSearch.addEventListener('change', applyFilters);
     els.globalSearch.addEventListener('input', applyFilters);
 
