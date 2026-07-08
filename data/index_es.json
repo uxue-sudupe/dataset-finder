@@ -1,5 +1,5 @@
 {
-  "updated_at": "06/07/2026 21:50",
+  "updated_at": "08/07/2026 21:20",
   "n_tables": 2321,
   "data": [
     {
@@ -27833,7 +27833,7 @@
       "dominio_code": "indco",
       "type": "t",
       "title": "Índice general de producción industrial de la C.A. de Euskadi por territorio histórico, índice y periodo. 2005 - 2025",
-      "updated": "2026-07-02T09:10:23",
+      "updated": "2026-07-07T09:28:10",
       "variables": ["Territorio Histórico", "Índice", "periodo"],
       "time_var": "periodo",
       "first_period": "2005",
@@ -27854,7 +27854,7 @@
       "dominio_code": "indco",
       "type": "t",
       "title": "Índice de producción industrial de la C.A. de Euskadi por territorio histórico, sector (A21), índice y periodo. 2005 - 2025",
-      "updated": "2026-07-02T09:10:02",
+      "updated": "2026-07-07T09:28:09",
       "variables": ["Territorio Histórico", "actividad (A21-4)", "Índice", "periodo"],
       "time_var": "periodo",
       "first_period": "2005",
