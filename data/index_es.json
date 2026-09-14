@@ -1,5 +1,5 @@
 {
-  "updated_at": "13/09/2026 22:23",
+  "updated_at": "14/09/2026 23:11",
   "n_tables": 2326,
   "data": [
     {
@@ -16576,15 +16576,15 @@
       "id": "PX_050407_cempa_empa_pa17.px",
       "dominio_code": "cempa",
       "type": "t",
-      "title": "Población de 16 y más años de la C.A. de Euskadi por territorio histórico, país de nacimiento, relación con la actividad y sexo. 2021 - 2025",
+      "title": "Población de 16 y más años de la C.A. de Euskadi por territorio histórico, grupo de país de nacimiento, relación con la actividad y sexo. 2021 - 2025",
       "updated": "2026-08-19T09:18:15",
-      "variables": ["territorio histórico", "nacionalidad", "relación con la actividad", "sexo", "periodo"],
+      "variables": ["territorio histórico", "grupo de país de nacimiento", "relación con la actividad", "sexo", "periodo"],
       "time_var": "periodo",
       "first_period": "2021",
       "last_period": "2025",
       "frecuencia": "anual",
-      "keywords": "población, más, años, euskadi, por, territorio, histórico, país, nacimiento, relación, con, actividad, sexo, 2021, 2025, nacionalidad, periodo",
-      "search_text": "población de 16 y más años de la c.a. de euskadi por territorio histórico, país de nacimiento, relación con la actividad y sexo. 2021 - 2025 territorio histórico nacionalidad relación con la actividad sexo periodo población más años euskadi por territorio histórico país nacimiento relación con actividad sexo 2021 2025 nacionalidad periodo 050407 Censo de población y viviendas. Actividad",
+      "keywords": "población, más, años, euskadi, por, territorio, histórico, grupo, país, nacimiento, relación, con, actividad, sexo, 2021, 2025, periodo",
+      "search_text": "población de 16 y más años de la c.a. de euskadi por territorio histórico, grupo de país de nacimiento, relación con la actividad y sexo. 2021 - 2025 territorio histórico grupo de país de nacimiento relación con la actividad sexo periodo población más años euskadi por territorio histórico grupo país nacimiento relación con actividad sexo 2021 2025 periodo 050407 Censo de población y viviendas. Actividad",
       "api_url": "https://www.eustat.eus/bankupx/api/v1/es/DB/PX_050407_cempa_empa_pa17.px",
       "pxweb_url": "https://www.eustat.eus/bankupx/pxweb/es/DB/-/PX_050407_cempa_empa_pa17.px",
       "metadata_ok": true,
