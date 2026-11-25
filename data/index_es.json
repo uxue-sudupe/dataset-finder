@@ -1,5 +1,5 @@
 {
-  "updated_at": "24/11/2026 04:49",
+  "updated_at": "25/11/2026 03:35",
   "n_tables": 2037,
   "data": [
     {
@@ -36758,7 +36758,7 @@
       "dominio_code": "indco",
       "type": "t",
       "title": "Índice de costes de la construcción de la C.A. de Euskadi por tipo e índice",
-      "updated": "2026-10-27T09:14:11",
+      "updated": "2026-11-24T08:59:48",
       "variables": ["Tipo", "Índice", "periodo"],
       "time_var": "periodo",
       "first_period": "1995",
@@ -36779,11 +36779,11 @@
       "dominio_code": "indco",
       "type": "t",
       "title": "Índice de costes de la construcción de la C.A. de Euskadi por tipo, índice y periodo",
-      "updated": "2026-10-27T09:14:11",
+      "updated": "2026-11-24T08:59:44",
       "variables": ["Tipo", "Índice", "periodo"],
       "time_var": "periodo",
       "first_period": "1995-01",
-      "last_period": "2026-09",
+      "last_period": "2026-10",
       "frecuencia": "mensual",
       "keywords": "índice, costes, construcción, euskadi, por, tipo, periodo",
       "search_text": "índice de costes de la construcción de la c.a. de euskadi por tipo, índice y periodo tipo índice periodo índice costes construcción euskadi por tipo periodo 112312 Indice de producción industrial",
